@@ -1,0 +1,54 @@
+- name: Install kubernetes client packages
+  dnf:
+    name:
+      - bash-completion
+      - kubectl
+
+- name: Create config directory
+  file:
+    path: /home/{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Copy config
+  synchronize:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/{{ ansible_user }}/.kube/config
+  delegate_to: "{{ groups.masters[0] }}"
+
+- name: Set correct permission for kubeconfig
+  file:
+    state: file
+    path: /home/{{ ansible_user }}/.kube/config
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Enable autocompletion for kubectl
+  lineinfile:
+    destfile: "/home/{{ ansible_user }}/.bashrc"
+    state: present
+    line: "source <(kubectl completion bash)"
+
+- name: Give admin priviliges to default kubernetes account
+  become: yes
+  become_user: "{{ ansible_user }}"
+  run_once: true
+  command: >
+    kubectl create clusterrolebinding default-admin
+      --clusterrole=cluster-admin
+      --serviceaccount=kube-system:default
+
+- name: Install helm
+  block:
+    - get_url:
+        url: https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get
+        dest: /tmp/get_helm.sh
+        mode: u=rwx
+    - command: /tmp/get_helm.sh
+
+- name: Initialize helm
+  become: yes
+  become_user: "{{ ansible_user }}"
+  run_once: true
+  command: helm init

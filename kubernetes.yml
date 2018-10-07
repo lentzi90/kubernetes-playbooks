@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  gather_facts: False
+  roles:
+    - init
+  tags:
+    - prereq
+
+- hosts: nodes
+  become: yes
+  become_user: root
+  roles:
+    - kubernetes-node
+  tags:
+    - prereq
+
+- hosts: masters
+  become: yes
+  become_user: root
+  roles:
+    - kubernetes-master
+  tags:
+    - init
+    - masters
+
+- hosts: clients
+  become: yes
+  become_user: root
+  roles:
+    - kubernetes-client
+  tags:
+    - client
+
+- hosts: workers
+  become: yes
+  become_user: root
+  roles:
+    - kubernetes-worker
+  tags:
+    - join
+    - workers

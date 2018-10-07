@@ -1,0 +1,2 @@
+- name: Join the cluster
+  command: "{{ hostvars.master.join_command }}"
