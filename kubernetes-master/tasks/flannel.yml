@@ -1,0 +1,2 @@
+- name: Install Flannel network provider
+  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f "https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true"

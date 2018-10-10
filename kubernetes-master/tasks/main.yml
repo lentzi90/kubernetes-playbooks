@@ -15,5 +15,4 @@
     - set_fact:
         join_command: "{{ join_output.stdout }}"
 
-- name: Install flannel network
-  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f "https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true"
+- import_tasks: flannel.yml
