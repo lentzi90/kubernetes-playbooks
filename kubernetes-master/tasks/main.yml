@@ -15,5 +15,5 @@
     - set_fact:
         join_command: "{{ join_output.stdout }}"
 
-- name: Install kube-router network
-  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f "https://github.com/lentzi90/flannel/blob/multi-arch-kube/Documentation/kube-flannel.yml?raw=true"
+- name: Install flannel network
+  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f "https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml?raw=true"
