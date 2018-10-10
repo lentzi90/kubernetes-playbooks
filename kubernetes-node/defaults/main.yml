@@ -1,0 +1,4 @@
+kubernetes_version: "1.11.3"
+container_runtime: "cri-o"
+cri_socket: "/var/run/crio/crio.sock"
+cgroup_driver: "systemd"
