@@ -4,3 +4,19 @@ api:
   advertiseAddress: {{ advertise_address | default(ansible_host) }}
 networking:
   podSubnet: "10.244.0.0/16"
+{% if cri_socket is defined %}
+nodeRegistration:
+  criSocket: {{ cri_socket }}
+{% endif %}
+{% if cgroup_driver is defined %}
+kubeletConfiguration:
+  baseConfig:
+    cgroupDriver: {{ cgroup_driver }}
+{% endif %}
+---
+{% if cri_socket is defined %}
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: NodeConfiguration
+nodeRegistration:
+  criSocket: {{ cri_socket }}
+{% endif %}

@@ -1,2 +1,2 @@
 - name: Join the cluster
-  command: "{{ hostvars.master.join_command }}"
+  command: "{{ hostvars.master.join_command }} {{ '--cri-socket ' + cri_socket if cri_socket is defined }}"
