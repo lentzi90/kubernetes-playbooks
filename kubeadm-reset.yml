@@ -4,4 +4,4 @@
   become_user: root
   tasks:
     - name: Reset kubeadm
-      command: kubeadm reset
+      command: kubeadm reset {{ '--cri-socket ' + cri_socket if cri_socket is defined }}
