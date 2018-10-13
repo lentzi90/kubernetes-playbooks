@@ -15,4 +15,4 @@
     - set_fact:
         join_command: "{{ join_output.stdout }}"
 
-- import_tasks: flannel.yml
+- import_tasks: "{{ network_provider }}.yml"
