@@ -71,13 +71,6 @@
 
 # -----------------------------------------------------------------------------
 
-- name: Set image pull progress deadline
-  lineinfile:
-    destfile: /etc/sysconfig/kubelet
-    regexp: '^KUBELET_EXTRA_ARGS='
-    line: 'KUBELET_EXTRA_ARGS=--image-pull-progress-deadline=5m0s'
-    state: present
-
 - name: Start and enable kubelet service
   systemd:
     name: kubelet
@@ -85,13 +78,13 @@
     enabled: yes
 
 - name: Pass bridged IPv4 traffic to iptables
-  command: sysctl net.bridge.bridge-nf-call-iptables
-  register: iptables
-  changed_when: False
-
-- name: Pass bridged IPv4 traffic to iptables
-  command: sysctl net.bridge.bridge-nf-call-iptables=1
-  when: iptables.stdout != "net.bridge.bridge-nf-call-iptables = 1"
+  block:
+    - command: sysctl net.bridge.bridge-nf-call-iptables
+      register: iptables
+      changed_when: False
+    - command: sysctl net.bridge.bridge-nf-call-iptables=1
+      when: iptables.stdout != "net.bridge.bridge-nf-call-iptables = 1"
+  when: network_provider in ["flannel", "kube-router"]
 
 - name: Reload daemons
   systemd:

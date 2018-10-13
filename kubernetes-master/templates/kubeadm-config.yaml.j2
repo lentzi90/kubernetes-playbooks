@@ -2,8 +2,10 @@ apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
 api:
   advertiseAddress: {{ advertise_address | default(ansible_host) }}
+{% if network_provider == "flannel" %}
 networking:
   podSubnet: "10.244.0.0/16"
+{% endif %}
 {% if cri_socket is defined %}
 nodeRegistration:
   criSocket: {{ cri_socket }}
