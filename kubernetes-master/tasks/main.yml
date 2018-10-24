@@ -15,4 +15,4 @@
     - set_fact:
         join_command: "{{ join_output.stdout }}"
 
-- import_tasks: "{{ network_provider }}.yml"
+- include_tasks: "{{ network_provider }}.yml"

@@ -28,7 +28,7 @@
     state: stopped
   when: firewalld.stat.exists
 
-- import_tasks: "{{ container_runtime }}.yml"
+- include_tasks: "{{ container_runtime }}.yml"
 
 - name: Set SELinux to permissive permanently
   lineinfile:
