@@ -1,0 +1,8 @@
+- name: Install parts
+  dnf:
+    name:
+      - kubernetes-node-{{ kubernetes_version }}
+      - kubernetes-kubeadm-{{ kubernetes_version }}
+      - kubernetes-client-{{ kubernetes_version }}
+      # Optional
+      - iproute-tc

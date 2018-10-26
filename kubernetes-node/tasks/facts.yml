@@ -1,0 +1,9 @@
+- name: Set cri socket if needed
+  set_fact:
+    cri_socket: /var/run/crio/crio.sock
+  when: container_runtime == "cri-o"
+
+- name: Set cgroup driver if needed
+  set_fact:
+    cgroup_driver: systemd
+  when: container_runtime == "cri-o"

@@ -1,3 +1,5 @@
+- include_tasks: facts.yml
+
 - name: Add hostname to /etc/hosts
   lineinfile:
     destfile: /etc/hosts
@@ -42,34 +44,7 @@
   command: setenforce 0
   when: selinux is changed
 
-# -----------------------------------------------------------------------------
-- name: Add kubernetes repo
-  yum_repository:
-    name: Kubernetes
-    file: kubernetes
-    description: Kubernetes repository
-    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-{{ ansible_architecture }}
-    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-    gpgcheck: yes
-    repo_gpgcheck: yes
-  register: kubernetes_repo
-
-- name: Refresh repo cache
-  command: dnf clean metadata
-  args:
-    warn: no
-  when: kubernetes_repo.changed
-
-- name: Install parts
-  dnf:
-    name:
-      - kubelet-{{ kubernetes_version }}
-      - kubeadm-{{ kubernetes_version }}
-      - kubectl-{{ kubernetes_version }}
-      # Optional
-      - iproute-tc
-
-# -----------------------------------------------------------------------------
+- include_tasks: "{{ kubernetes_flavor or 'vanilla' }}.yml"
 
 - name: Start and enable kubelet service
   systemd:
