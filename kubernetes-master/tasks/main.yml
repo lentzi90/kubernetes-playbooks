@@ -6,14 +6,14 @@
 - name: Initialize master
   command: >
     kubeadm init --pod-network-cidr "10.244.0.0/16"
-      --kubernetes-version 1.9.3
-  when: kubernetes_version == "1.9.3"
+      --kubernetes-version {{ kubernetes_version }}
+  when: kubernetes_version in ["1.9.3", "1.10.1"]
 
 - name: Initialize master
   command: kubeadm init --config /etc/kubernetes/kubeadm-config.yaml
   args:
     creates: /etc/kubernetes/admin.conf
-  when: kubernetes_version != "1.9.3"
+  when: kubernetes_version not in ["1.9.3", "1.10.1"]
 
 - name: Store join command
   block:
