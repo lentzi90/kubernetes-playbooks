@@ -1,3 +1,4 @@
 kubernetes_version: "1.11.3"
-container_runtime: "cri-o"
+kubernetes_flavor: vanilla
+container_runtime: cri-o
 network_provider: flannel
