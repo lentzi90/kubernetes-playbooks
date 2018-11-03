@@ -1,0 +1,60 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Allow upgrading kubernetes packages
+      include_role:
+        name: kubernetes-node
+        tasks_from: release-version.yml
+
+- hosts: masters
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubeadm
+      dnf:
+        name: kubeadm-{{ kubernetes_version }}
+        state: present
+
+    - name: Plan upgrade
+      command: kubeadm upgrade plan
+
+    - name: Upgrade cluster
+      command: kubeadm upgrade apply v{{ kubernetes_version }} -y
+
+
+- hosts: nodes
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubelet
+      dnf:
+        name: kubelet-{{ kubernetes_version }}
+        state: present
+
+    - name: Restart kubelet service
+      systemd:
+        name: kubelet
+        state: restarted
+
+- hosts: clients
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubectl
+      dnf:
+        name: kubectl-{{ kubernetes_version }}
+        state: present
+
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Exclude kubernetes packages from upgrades
+      include_role:
+        name: kubernetes-node
+        tasks_from: freeze-version.yml

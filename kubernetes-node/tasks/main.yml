@@ -65,7 +65,6 @@
     name:
       - kubelet-{{ kubernetes_version }}
       - kubeadm-{{ kubernetes_version }}
-      - kubectl-{{ kubernetes_version }}
       # Optional
       - iproute-tc
 
@@ -89,3 +88,5 @@
 - name: Reload daemons
   systemd:
     daemon_reload: yes
+
+- import_tasks: freeze-version.yml
