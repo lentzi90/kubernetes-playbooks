@@ -1,13 +1,4 @@
 ---
-- hosts: all
-  become: yes
-  become_user: root
-  tasks:
-    - name: Allow upgrading kubernetes packages
-      include_role:
-        name: kubernetes-node
-        tasks_from: release-version.yml
-
 - hosts: masters
   become: yes
   become_user: root
@@ -17,6 +8,7 @@
       dnf:
         name: kubeadm-{{ kubernetes_version }}
         state: present
+        disable_excludes: all
 
     - name: Plan upgrade
       command: kubeadm upgrade plan
@@ -34,6 +26,7 @@
       dnf:
         name: kubelet-{{ kubernetes_version }}
         state: present
+        disable_excludes: all
 
     - name: Restart kubelet service
       systemd:
@@ -49,12 +42,4 @@
       dnf:
         name: kubectl-{{ kubernetes_version }}
         state: present
-
-- hosts: all
-  become: yes
-  become_user: root
-  tasks:
-    - name: Exclude kubernetes packages from upgrades
-      include_role:
-        name: kubernetes-node
-        tasks_from: freeze-version.yml
+        disable_excludes: all

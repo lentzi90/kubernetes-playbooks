@@ -1,6 +1,0 @@
-- name: Exclude kubernetes packages from updates
-  lineinfile:
-    dest=/etc/dnf/dnf.conf
-    state=present
-    regexp="^excludepkgs=.*$"
-    line="excludepkgs=kubelet,kubeadm,kubectl"

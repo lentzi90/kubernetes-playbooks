@@ -8,6 +8,13 @@
   args:
     creates: /etc/kubernetes/admin.conf
 
+- name: Adjust liveness probe
+  lineinfile:
+    destfile: /etc/kubernetes/manifests/kube-apiserver.yaml
+    regexp: '^(.*failureThreshold:)\s\d+$'
+    line: '\1 80'
+    backrefs: yes
+
 - name: Store join command
   block:
     - command: kubeadm token create --print-join-command

@@ -1,18 +1,9 @@
-- name: Allow upgrading kubernetes packages
-  include_role:
-    name: kubernetes-node
-    tasks_from: release-version.yml
-
 - name: Install kubernetes client packages
   dnf:
     name:
       - bash-completion
       - kubectl-{{ kubernetes_version }}
-
-- name: Exclude kubernetes packages from upgrades
-  include_role:
-    name: kubernetes-node
-    tasks_from: freeze-version.yml
+    disable_excludes: all
 
 - name: Create config directory
   file:

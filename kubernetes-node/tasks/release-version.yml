@@ -1,5 +1,0 @@
-- name: Include kubernetes packages in updates
-  lineinfile:
-    dest=/etc/dnf/dnf.conf
-    state=absent
-    regexp="^excludepkgs=.*$"

@@ -52,6 +52,7 @@
     gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
     gpgcheck: yes
     repo_gpgcheck: yes
+    exclude: kube*
   register: kubernetes_repo
 
 - name: Refresh repo cache
@@ -67,6 +68,7 @@
       - kubeadm-{{ kubernetes_version }}
       # Optional
       - iproute-tc
+    disable_excludes: all
 
 # -----------------------------------------------------------------------------
 
@@ -88,5 +90,3 @@
 - name: Reload daemons
   systemd:
     daemon_reload: yes
-
-- import_tasks: freeze-version.yml

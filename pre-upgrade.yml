@@ -1,9 +1,0 @@
----
-- hosts: all
-  become: yes
-  become_user: root
-  tasks:
-    - name: Allow upgrading kubernetes packages
-      include_role:
-        name: kubernetes-node
-        tasks_from: release-version.yml
