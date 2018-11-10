@@ -2,7 +2,8 @@
   dnf:
     name:
       - bash-completion
-      - kubectl
+      - kubectl-{{ kubernetes_version }}
+    disable_excludes: all
 
 - name: Create config directory
   file:

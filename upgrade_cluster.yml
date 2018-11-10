@@ -1,0 +1,45 @@
+---
+- hosts: masters
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubeadm
+      dnf:
+        name: kubeadm-{{ kubernetes_version }}
+        state: present
+        disable_excludes: all
+
+    - name: Plan upgrade
+      command: kubeadm upgrade plan
+
+    - name: Upgrade cluster
+      command: kubeadm upgrade apply v{{ kubernetes_version }} -y
+
+
+- hosts: nodes
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubelet
+      dnf:
+        name: kubelet-{{ kubernetes_version }}
+        state: present
+        disable_excludes: all
+
+    - name: Restart kubelet service
+      systemd:
+        name: kubelet
+        state: restarted
+
+- hosts: clients
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Upgrade kubectl
+      dnf:
+        name: kubectl-{{ kubernetes_version }}
+        state: present
+        disable_excludes: all

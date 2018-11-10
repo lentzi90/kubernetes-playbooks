@@ -15,6 +15,13 @@
     creates: /etc/kubernetes/admin.conf
   when: kubernetes_version not in ["1.9.3", "1.10.1"]
 
+- name: Adjust liveness probe
+  lineinfile:
+    destfile: /etc/kubernetes/manifests/kube-apiserver.yaml
+    regexp: '^(.*failureThreshold:)\s\d+$'
+    line: '\1 80'
+    backrefs: yes
+
 - name: Store join command
   block:
     - command: kubeadm token create --print-join-command
